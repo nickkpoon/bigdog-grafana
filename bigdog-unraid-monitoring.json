@@ -932,7 +932,7 @@
           "placement": "bottom",
           "showLegend": true,
           "sortBy": "Last",
-          "sortDesc": true
+          "sortDesc": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -2255,12 +2255,12 @@
             "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 2,
-            "pointSize": 5,
+            "pointSize": 6,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
-            "showValues": false,
+            "showPoints": "auto",
+            "showValues": true,
             "spanNulls": true,
             "stacking": {
               "group": "A",
@@ -2302,7 +2302,8 @@
           "calcs": [
             "mean",
             "max",
-            "last"
+            "min",
+            "lastNotNull"
           ],
           "displayMode": "table",
           "placement": "bottom",
@@ -3255,5 +3256,5 @@
   "timezone": "browser",
   "title": "BIGDOG - Dashboard",
   "uid": "bigdog-unraid-monitoring",
-  "version": 16
+  "version": 17
 }
