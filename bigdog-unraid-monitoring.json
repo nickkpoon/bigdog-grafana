@@ -248,68 +248,6 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "s"
-        }
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 16,
-        "y": 1
-      },
-      "id": 16,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "13.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ffjfuth1v6x34e"
-          },
-          "query": "SELECT last(\"uptime\") FROM \"system\" WHERE $timeFilter",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series"
-        }
-      ],
-      "title": "Uptime",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "ffjfuth1v6x34e"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
             "mode": "palette-classic"
           },
           "custom": {
@@ -346,6 +284,8 @@
               "mode": "off"
             }
           },
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -359,30 +299,34 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "percent"
         }
       },
       "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 20,
+        "h": 8,
+        "w": 6,
+        "x": 12,
         "y": 1
       },
-      "id": 17,
+      "id": 53,
       "options": {
         "annotations": {
           "clustering": -1,
           "multiLane": false
         },
         "legend": {
-          "calcs": [],
-          "displayMode": "hidden",
+          "calcs": [
+            "mean",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -393,13 +337,13 @@
             "type": "influxdb",
             "uid": "ffjfuth1v6x34e"
           },
-          "query": "SELECT mean(\"load1\") AS \"1m\", mean(\"load5\") AS \"5m\", mean(\"load15\") AS \"15m\" FROM \"system\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT mean(\"util_pct\") AS \"GPU %\", mean(\"fan_pct\") AS \"Fan %\" FROM \"gpu_data\" WHERE $timeFilter GROUP BY time($__interval) fill(linear)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
         }
       ],
-      "title": "System Load (1m / 5m / 15m)",
+      "title": "GPU Utilization",
       "type": "timeseries"
     },
     {
@@ -465,8 +409,8 @@
       "gridPos": {
         "h": 4,
         "w": 8,
-        "x": 16,
-        "y": 5
+        "x": 0,
+        "y": 9
       },
       "id": 19,
       "options": {
@@ -505,12 +449,174 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffjfuth1v6x34e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "id": 17,
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffjfuth1v6x34e"
+          },
+          "query": "SELECT mean(\"load1\") AS \"1m\", mean(\"load5\") AS \"5m\", mean(\"load15\") AS \"15m\" FROM \"system\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "System Load (1m / 5m / 15m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ffjfuth1v6x34e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ffjfuth1v6x34e"
+          },
+          "query": "SELECT last(\"uptime\") FROM \"system\" WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 13
       },
       "id": 56,
       "title": "TEMPERATURES",
@@ -584,7 +690,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 10
+        "y": 14
       },
       "id": 1,
       "options": {
@@ -696,7 +802,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 10
+        "y": 14
       },
       "id": 2,
       "options": {
@@ -808,7 +914,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 10
+        "y": 14
       },
       "id": 50,
       "options": {
@@ -824,7 +930,9 @@
           ],
           "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -920,7 +1028,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 10
+        "y": 14
       },
       "id": 51,
       "options": {
@@ -966,7 +1074,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 22
       },
       "id": 57,
       "title": "DISK I/O (PER DRIVE)",
@@ -1036,7 +1144,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 19
+        "y": 23
       },
       "id": 30,
       "options": {
@@ -1139,7 +1247,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 19
+        "y": 23
       },
       "id": 31,
       "options": {
@@ -1242,7 +1350,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 19
+        "y": 23
       },
       "id": 38,
       "options": {
@@ -1345,7 +1453,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 19
+        "y": 23
       },
       "id": 39,
       "options": {
@@ -1448,7 +1556,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 25
+        "y": 29
       },
       "id": 34,
       "options": {
@@ -1551,7 +1659,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 25
+        "y": 29
       },
       "id": 35,
       "options": {
@@ -1654,7 +1762,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 25
+        "y": 29
       },
       "id": 32,
       "options": {
@@ -1757,7 +1865,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 25
+        "y": 29
       },
       "id": 33,
       "options": {
@@ -1860,7 +1968,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 31
+        "y": 35
       },
       "id": 36,
       "options": {
@@ -1963,7 +2071,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 31
+        "y": 35
       },
       "id": 37,
       "options": {
@@ -2008,7 +2116,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 41
       },
       "id": 58,
       "title": "UPS / POWER (NUT)",
@@ -2078,7 +2186,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 42
       },
       "id": 6,
       "options": {
@@ -2182,7 +2290,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 38
+        "y": 42
       },
       "id": 5,
       "options": {
@@ -2313,7 +2421,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 48
       },
       "id": 41,
       "options": {
@@ -2415,7 +2523,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 44
+        "y": 48
       },
       "id": 20,
       "options": {
@@ -2460,7 +2568,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 54
       },
       "id": 59,
       "title": "GPU",
@@ -2528,9 +2636,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
+        "w": 12,
         "x": 0,
-        "y": 51
+        "y": 55
       },
       "id": 52,
       "options": {
@@ -2614,112 +2722,6 @@
               "mode": "off"
             }
           },
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percent"
-        }
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 51
-      },
-      "id": 53,
-      "options": {
-        "annotations": {
-          "clustering": -1,
-          "multiLane": false
-        },
-        "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "last"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "13.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ffjfuth1v6x34e"
-          },
-          "query": "SELECT mean(\"util_pct\") AS \"GPU %\", mean(\"fan_pct\") AS \"Fan %\" FROM \"gpu_data\" WHERE $timeFilter GROUP BY time($__interval) fill(linear)",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series"
-        }
-      ],
-      "title": "GPU Utilization",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "ffjfuth1v6x34e"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "showValues": false,
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -2738,9 +2740,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 16,
-        "y": 51
+        "w": 12,
+        "x": 12,
+        "y": 55
       },
       "id": 54,
       "options": {
@@ -2786,7 +2788,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 61
       },
       "id": 60,
       "title": "NETWORK",
@@ -2856,7 +2858,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 62
       },
       "id": 10,
       "options": {
@@ -2959,7 +2961,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 58
+        "y": 62
       },
       "id": 11,
       "options": {
@@ -3004,7 +3006,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 66
+        "y": 70
       },
       "id": 61,
       "title": "DISK USAGE & HEALTH",
@@ -3050,7 +3052,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 67
+        "y": 71
       },
       "id": 7,
       "options": {
@@ -3199,7 +3201,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 67
+        "y": 71
       },
       "id": 9,
       "options": {
@@ -3253,5 +3255,5 @@
   "timezone": "browser",
   "title": "BIGDOG - Dashboard",
   "uid": "bigdog-unraid-monitoring",
-  "version": 14
+  "version": 16
 }
