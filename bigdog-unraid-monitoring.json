@@ -3080,7 +3080,7 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "13.0.1",
+      "pluginVersion": "13.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -3210,7 +3210,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "13.0.1",
+      "pluginVersion": "13.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -3256,5 +3256,5 @@
   "timezone": "browser",
   "title": "BIGDOG - Dashboard",
   "uid": "bigdog-unraid-monitoring",
-  "version": 18
+  "version": 19
 }
